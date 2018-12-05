@@ -1,4 +1,4 @@
-use std::fmt;
+use core::fmt;
 
 use macros::ElementwiseComparator;
 use macros::comparison::ComparisonFailure;

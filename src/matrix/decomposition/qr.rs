@@ -8,7 +8,7 @@ use matrix::decomposition::{
 };
 use matrix::decomposition::householder;
 
-use std::any::Any;
+use core::any::Any;
 
 use libnum::Float;
 
@@ -178,7 +178,7 @@ impl<T> HouseholderQr<T> where T: Float {
     /// Decomposes the given matrix into implicitly stored factors
     /// `Q` and `R` as described in the struct documentation.
     pub fn decompose(matrix: Matrix<T>) -> HouseholderQr<T> {
-        use std::cmp::min;
+        use core::cmp::min;
 
         // The implementation here is based on
         // Algorithm 5.2.1 (Householder QR) from
@@ -417,7 +417,7 @@ mod tests {
     }
 
     fn verify_thin_qr(x: Matrix<f64>, qr: ThinQR<f64>) {
-        use std::cmp::min;
+        use core::cmp::min;
 
         let m = x.rows();
         let n = x.cols();

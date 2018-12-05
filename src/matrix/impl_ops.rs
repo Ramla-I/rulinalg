@@ -5,8 +5,8 @@ use super::{BaseMatrix, BaseMatrixMut};
 use super::super::utils;
 use super::super::vector::Vector;
 
-use std::ops::{Mul, Add, Div, Sub, Index, IndexMut, Neg};
-use std::ops::{MulAssign, AddAssign, SubAssign, DivAssign};
+use core::ops::{Mul, Add, Div, Sub, Index, IndexMut, Neg};
+use core::ops::{MulAssign, AddAssign, SubAssign, DivAssign};
 use libnum::Zero;
 
 /// Indexes matrix.

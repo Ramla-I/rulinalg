@@ -203,7 +203,7 @@ impl<'a, T> HouseholderComposition<'a, T> where T: Float {
     pub fn left_multiply_into<X>(&self, matrix: &mut X)
         where X: BaseMatrixMut<T>
     {
-        use std::cmp::min;
+        use core::cmp::min;
 
         let m = self.storage.rows();
         let n = self.storage.cols();
@@ -233,7 +233,7 @@ impl<'a, T> HouseholderComposition<'a, T> where T: Float {
     /// - `k` must be less than or equal to `m`, the number
     ///   of rows of `Q`.
     pub fn first_k_columns(&self, k: usize) -> Matrix<T> {
-        use std::cmp::min;
+        use core::cmp::min;
         let m = self.storage.rows();
         let n = self.storage.cols();
         let p = min(m, n);

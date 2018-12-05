@@ -5,7 +5,7 @@ use matrix::forward_substitution;
 use vector::Vector;
 use utils::dot;
 
-use std::any::Any;
+use core::any::Any;
 
 use libnum::{Zero, Float};
 

@@ -1,9 +1,9 @@
-use std::ops::{Mul, Add, Div};
+use core::ops::{Mul, Add, Div};
 use libnum::{One, Zero, Float, FromPrimitive};
-use std::fmt;
-use std::iter::FromIterator;
-use std::slice::{Iter, IterMut};
-use std::vec::IntoIter;
+use core::fmt;
+use core::iter::FromIterator;
+use core::slice::{Iter, IterMut};
+use alloc::vec::IntoIter;
 
 use norm::{VectorNorm, VectorMetric};
 use utils;

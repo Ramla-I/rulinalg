@@ -1,4 +1,4 @@
-use std;
+use core;
 
 use matrix::{Matrix, BaseMatrix, BaseMatrixMut};
 use vector::Vector;
@@ -107,7 +107,7 @@ pub struct PermutationMatrix<T> {
 
     // Currently, we need to let PermutationMatrix be generic over T,
     // because BaseMatrixMut is.
-    marker: std::marker::PhantomData<T>
+    marker: core::marker::PhantomData<T>
 }
 
 /// Parity is the fact of being even or odd.
@@ -124,7 +124,7 @@ impl<T> PermutationMatrix<T> {
     pub fn identity(n: usize) -> Self {
         PermutationMatrix {
             perm: (0 .. n).collect(),
-            marker: std::marker::PhantomData
+            marker: core::marker::PhantomData
         }
     }
 
@@ -143,7 +143,7 @@ impl<T> PermutationMatrix<T> {
 
         PermutationMatrix {
             perm: inv,
-            marker: std::marker::PhantomData
+            marker: core::marker::PhantomData
         }
     }
 
@@ -165,7 +165,7 @@ impl<T> PermutationMatrix<T> {
     pub fn from_array<A: Into<Vec<usize>>>(array: A) -> Result<PermutationMatrix<T>, Error> {
         let p = PermutationMatrix {
             perm: array.into(),
-            marker: std::marker::PhantomData
+            marker: core::marker::PhantomData
         };
         validate_permutation(&p.perm).map(|_| p)
     }
@@ -190,7 +190,7 @@ impl<T> PermutationMatrix<T> {
     pub unsafe fn from_array_unchecked<A: Into<Vec<usize>>>(array: A) -> PermutationMatrix<T> {
         let p = PermutationMatrix {
             perm: array.into(),
-            marker: std::marker::PhantomData
+            marker: core::marker::PhantomData
         };
         p
     }

@@ -2,9 +2,9 @@
 //!
 //! Contains support methods for linear algebra structs.
 
-use std::cmp;
+use core::cmp;
 use libnum::Zero;
-use std::ops::{Add, Mul, Sub, Div};
+use core::ops::{Add, Mul, Sub, Div};
 
 /// Compute dot product of two slices.
 ///

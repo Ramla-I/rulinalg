@@ -1,5 +1,5 @@
-use std::iter::{ExactSizeIterator, FromIterator};
-use std::mem;
+use core::iter::{ExactSizeIterator, FromIterator};
+use core::mem;
 
 use super::{Matrix, MatrixSlice, MatrixSliceMut};
 use super::{Column, ColumnMut, Cols, ColsMut, Row, RowMut, Rows, RowsMut, Diagonal, DiagonalMut};

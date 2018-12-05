@@ -1,7 +1,7 @@
 use super::{Matrix, MatrixSlice, MatrixSliceMut, BaseMatrix};
 
-use std::any::{Any, TypeId};
-use std::ops::{Add, Mul};
+use core::any::{Any, TypeId};
+use core::ops::{Add, Mul};
 
 use libnum::Zero;
 use matrixmultiply;

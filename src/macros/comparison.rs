@@ -3,7 +3,7 @@ use ulp::Ulp;
 
 use libnum::{Num, Float};
 
-use std::fmt;
+use core::fmt;
 
 /// Trait that describes elementwise comparators for [assert_matrix_eq!](../macro.assert_matrix_eq!.html).
 ///
@@ -206,11 +206,11 @@ mod tests {
     };
     use ulp::{Ulp, UlpComparisonResult};
     use quickcheck::TestResult;
-    use std::f64;
+    use core::f64;
 
     /// Returns the next adjacent floating point number (in the direction of positive infinity)
     fn next_f64(x: f64) -> f64 {
-        use std::mem;
+        use core::mem;
         let as_int = unsafe { mem::transmute::<f64, i64>(x) };
         unsafe { mem::transmute::<i64, f64>(as_int + 1) }
     }

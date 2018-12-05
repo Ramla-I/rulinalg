@@ -1,4 +1,4 @@
-use std::ops::{Mul, Add, Div, Sub, Rem,
+use core::ops::{Mul, Add, Div, Sub, Rem,
                MulAssign, AddAssign, DivAssign, SubAssign, RemAssign,
                Neg, Not,
                BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign,

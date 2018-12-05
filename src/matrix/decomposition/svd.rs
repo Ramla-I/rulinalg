@@ -1,8 +1,8 @@
 use matrix::{Matrix, BaseMatrix, BaseMatrixMut, MatrixSlice, MatrixSliceMut};
 use error::{Error, ErrorKind};
 
-use std::any::Any;
-use std::cmp;
+use core::any::Any;
+use core::cmp;
 
 use libnum::{Float, Signed};
 

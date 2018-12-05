@@ -133,7 +133,7 @@ mod lu;
 mod eigen;
 mod householder;
 
-use std::any::Any;
+use core::any::Any;
 
 use matrix::{Matrix, BaseMatrix};
 use norm::Euclidean;

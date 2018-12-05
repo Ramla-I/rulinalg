@@ -1,5 +1,5 @@
-use std::any::Any;
-use std::fmt;
+use core::any::Any;
+use core::fmt;
 use libnum::{One, Zero, Float, FromPrimitive};
 
 use super::{Matrix};

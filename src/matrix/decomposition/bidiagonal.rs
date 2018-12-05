@@ -1,8 +1,8 @@
 use matrix::{Matrix, BaseMatrix, BaseMatrixMut, MatrixSlice, MatrixSliceMut};
 use error::{Error, ErrorKind};
 
-use std;
-use std::any::Any;
+use core;
+use core::any::Any;
 
 use libnum::Float;
 
@@ -60,7 +60,7 @@ impl<T> Matrix<T>
                 let row: &[T];
                 unsafe {
                     // Get the kth row from column k+1 to end.
-                    row = std::slice::from_raw_parts(self.data
+                    row = core::slice::from_raw_parts(self.data
                                                          .as_ptr()
                                                          .offset((k * self.cols + k + 1) as isize),
                                                      n - k - 1);

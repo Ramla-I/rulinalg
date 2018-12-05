@@ -6,8 +6,8 @@
 //! Most of the logic for manipulating matrices is generically implemented
 //! via `BaseMatrix` and `BaseMatrixMut` trait.
 
-use std;
-use std::marker::PhantomData;
+use core;
+use core::marker::PhantomData;
 use libnum::Float;
 
 use error::{Error, ErrorKind};
@@ -160,19 +160,19 @@ pub struct RowsMut<'a, T: 'a> {
 impl<'a, T: 'a> Row<'a, T> {
     /// Returns the row as a slice.
     pub fn raw_slice(&self) -> &'a [T] {
-        unsafe { std::slice::from_raw_parts(self.row.as_ptr(), self.row.cols()) }
+        unsafe { core::slice::from_raw_parts(self.row.as_ptr(), self.row.cols()) }
     }
 }
 
 impl<'a, T: 'a> RowMut<'a, T> {
     /// Returns the row as a slice.
     pub fn raw_slice(&self) -> &'a [T] {
-        unsafe { std::slice::from_raw_parts(self.row.as_ptr(), self.row.cols()) }
+        unsafe { core::slice::from_raw_parts(self.row.as_ptr(), self.row.cols()) }
     }
 
     /// Returns the row as a slice.
     pub fn raw_slice_mut(&mut self) -> &'a mut [T] {
-        unsafe { std::slice::from_raw_parts_mut(self.row.as_mut_ptr(), self.row.cols()) }
+        unsafe { core::slice::from_raw_parts_mut(self.row.as_mut_ptr(), self.row.cols()) }
     }
 }
 

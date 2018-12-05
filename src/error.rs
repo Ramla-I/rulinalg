@@ -1,10 +1,10 @@
 //! Error handling for the linalg module.
 
-use std::boxed::Box;
-use std::convert::Into;
-use std::error;
-use std::fmt;
-use std::marker::{Send, Sync};
+use alloc::boxed::Box;
+use core::convert::Into;
+use core::error;
+use core::fmt;
+use core::marker::{Send, Sync};
 
 /// An error related to the linalg module.
 #[derive(Debug)]

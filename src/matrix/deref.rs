@@ -1,7 +1,7 @@
 use super::{MatrixSlice, MatrixSliceMut};
 use super::{Row, RowMut, Column, ColumnMut};
 
-use std::ops::{Deref, DerefMut};
+use core::ops::{Deref, DerefMut};
 
 impl<'a, T: 'a> Deref for Row<'a, T> {
     type Target = MatrixSlice<'a, T>;

@@ -88,6 +88,7 @@
 
 extern crate num as libnum;
 extern crate matrixmultiply;
+extern crate alloc;
 
 // macros should be at the top in order for macros to be accessible in subsequent modules
 #[macro_use]

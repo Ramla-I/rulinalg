@@ -3,7 +3,7 @@
 //! Contains implementations of `std::convert::From`
 //! for Matrix and Vector types.
 
-use std::convert::From;
+use core::convert::From;
 
 use libnum::{Zero, ToPrimitive, NumCast};
 

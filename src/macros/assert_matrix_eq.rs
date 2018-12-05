@@ -1,6 +1,6 @@
 use matrix::BaseMatrix;
 
-use std::fmt;
+use core::fmt;
 
 use macros::ElementwiseComparator;
 
@@ -638,7 +638,7 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn matrix_eq_ulp_nan() {
-        use std::f64;
+        use core::f64;
         let x = matrix![1.0, 2.0, 3.0;
                         4.0, 5.0, 6.0];
         let y = matrix![1.0, 2.0, f64::NAN;

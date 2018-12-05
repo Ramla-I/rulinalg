@@ -31,7 +31,7 @@ use matrix::BaseMatrix;
 use vector::Vector;
 use utils;
 
-use std::ops::Sub;
+use core::ops::Sub;
 use libnum::Float;
 
 /// Trait for vector norms
@@ -218,7 +218,7 @@ impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Lp<T> {
 #[cfg(test)]
 mod tests {
     use libnum::Float;
-    use std::f64;
+    use core::f64;
 
     use super::*;
     use vector::Vector;

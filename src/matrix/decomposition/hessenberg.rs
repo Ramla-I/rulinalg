@@ -1,7 +1,7 @@
 use matrix::{Matrix, BaseMatrix, BaseMatrixMut, MatrixSlice, MatrixSliceMut};
 use error::{Error, ErrorKind};
 
-use std::any::Any;
+use core::any::Any;
 
 use libnum::{Float};
 

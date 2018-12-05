@@ -2,8 +2,8 @@ use matrix::{Matrix, MatrixSliceMut, BaseMatrix, BaseMatrixMut};
 use norm::Euclidean;
 use error::{Error, ErrorKind};
 
-use std::cmp;
-use std::any::Any;
+use core::cmp;
+use core::any::Any;
 
 use libnum::{Float, Signed};
 use libnum::{cast, abs};

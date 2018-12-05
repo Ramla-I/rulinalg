@@ -5,7 +5,7 @@ use matrix::{Row, RowMut, Column, ColumnMut};
 use utils;
 use libnum::Zero;
 
-use std::ops::{Add, Mul, Div};
+use core::ops::{Add, Mul, Div};
 
 impl<T> BaseMatrix<T> for Matrix<T> {
     fn rows(&self) -> usize {

@@ -2,7 +2,7 @@ use matrix::BaseMatrix;
 
 use libnum::Zero;
 
-use std::iter::Iterator;
+use core::iter::Iterator;
 
 /// Returns true if the matrix is lower triangular, otherwise false.
 /// This generalizes to rectangular matrices, in which case

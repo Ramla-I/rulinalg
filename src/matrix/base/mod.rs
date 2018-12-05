@@ -30,13 +30,13 @@ use utils;
 use libnum::{Zero, Float};
 use error::Error;
 
-use std::any::Any;
-use std::cmp::min;
-use std::marker::PhantomData;
-use std::mem;
-use std::ops::{Add, Mul, Div};
-use std::ptr;
-use std::slice;
+use core::any::Any;
+use core::cmp::min;
+use core::marker::PhantomData;
+use core::mem;
+use core::ops::{Add, Mul, Div};
+use core::ptr;
+use core::slice;
 
 mod impl_base;
 

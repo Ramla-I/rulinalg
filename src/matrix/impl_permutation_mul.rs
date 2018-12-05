@@ -5,7 +5,7 @@ use vector::Vector;
 
 use libnum::Zero;
 
-use std::ops::Mul;
+use core::ops::Mul;
 
 /// Left-multiply a vector by a permutation matrix.
 impl<T> Mul<Vector<T>> for PermutationMatrix<T> {
