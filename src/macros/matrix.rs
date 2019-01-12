@@ -41,6 +41,9 @@
 /// # }
 /// ```
 ///
+
+use alloc::vec::Vec;
+
 #[macro_export]
 macro_rules! matrix {
     () => {

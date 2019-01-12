@@ -1,6 +1,9 @@
 use core::any::Any;
 use core::fmt;
-use libnum::{One, Zero, Float, FromPrimitive};
+use libnum::{One, Zero, FromPrimitive};
+
+use num_traits::float::FloatCore;
+use alloc::vec::Vec;
 
 use super::{Matrix};
 use super::{Axes};
@@ -194,7 +197,7 @@ impl<T: Clone + Zero + One> Matrix<T> {
     }
 }
 
-impl<T: Float + FromPrimitive> Matrix<T> {
+impl<T: FloatCore+ FromPrimitive> Matrix<T> {
     /// The mean of the matrix along the specified axis.
     ///
     /// - Axis Row - Arithmetic mean of rows.
@@ -264,7 +267,7 @@ impl<T: Float + FromPrimitive> Matrix<T> {
     /// # Failures
     ///
     /// - There are one or fewer row/columns in the working axis.
-    pub fn variance(&self, axis: Axes) -> Result<Vector<T>, Error> {
+    pub fn variance(&self, axis: Axes) -> Result<Vector<T>, &'static str> {
         let mean = self.mean(axis);
 
         let n: usize;
@@ -282,9 +285,8 @@ impl<T: Float + FromPrimitive> Matrix<T> {
         }
 
         if n < 2 {
-            return Err(Error::new(ErrorKind::InvalidArg,
-                                  "There must be at least two rows or columns in the working \
-                                   axis."));
+            return Err("There must be at least two rows or columns in the working \
+                                   axis.");
         }
 
         let mut variance = Vector::zeros(m);
@@ -314,7 +316,7 @@ impl<T: Float + FromPrimitive> Matrix<T> {
     }
 }
 
-impl<T: Any + Float> Matrix<T> {
+impl<T: Any + FloatCore> Matrix<T> {
     /// Solves the equation `Ax = y`.
     ///
     /// Requires a Vector `y` as input.
@@ -351,7 +353,7 @@ impl<T: Any + Float> Matrix<T> {
     ///
     /// - The matrix cannot be decomposed into an LUP form to solve.
     /// - There is no valid solution as the matrix is singular.
-    pub fn solve(self, y: Vector<T>) -> Result<Vector<T>, Error> {
+    pub fn solve(self, y: Vector<T>) -> Result<Vector<T>, &'static str> {
         PartialPivLu::decompose(self)?.solve(y)
     }
 
@@ -383,7 +385,7 @@ impl<T: Any + Float> Matrix<T> {
     ///
     /// - The matrix could not be LUP decomposed.
     /// - The matrix has zero determinant.
-    pub fn inverse(self) -> Result<Matrix<T>, Error> {
+    pub fn inverse(self) -> Result<Matrix<T>, &'static str> {
         PartialPivLu::decompose(self)?.inverse()
     }
 

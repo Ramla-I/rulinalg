@@ -35,7 +35,8 @@
 /// let vec = vector![1.0, 2.0, 3.0f32];
 /// # }
 /// ```
-///
+
+
 #[macro_export]
 macro_rules! vector {
     () => {

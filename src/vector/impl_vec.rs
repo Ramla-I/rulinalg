@@ -1,13 +1,14 @@
 use core::ops::{Mul, Add, Div};
-use libnum::{One, Zero, Float, FromPrimitive};
+use libnum::{One, Zero, FromPrimitive};
 use core::fmt;
 use core::iter::FromIterator;
 use core::slice::{Iter, IterMut};
-use alloc::vec::IntoIter;
-
+use alloc::vec::{IntoIter, Vec};
+use num_traits::float::FloatCore;
 use norm::{VectorNorm, VectorMetric};
 use utils;
 
+#[macro_use]
 use super::Vector;
 
 impl<T> Vector<T> {
@@ -385,7 +386,7 @@ impl<T: Copy + Div<T, Output = T>> Vector<T> {
     }
 }
 
-impl<T: Float> Vector<T> {
+impl<T: FloatCore> Vector<T> {
     /// Compute vector norm for vector.
     ///
     /// # Examples
@@ -428,7 +429,7 @@ impl<T: Float> Vector<T> {
     }
 }
 
-impl<T: Float + FromPrimitive> Vector<T> {
+impl<T: FloatCore+ FromPrimitive> Vector<T> {
     /// The mean of the vector.
     ///
     /// Returns the arithmetic mean of the vector.

@@ -82,13 +82,17 @@
 //!
 //! Note finally that much of the `Matrix`/`MatrixSlice`/`MatrixSliceMut` functionality is contained behind
 //! the `BaseMatrix`/`BaseMatrixMut` traits. This allows us to be generic over matrices or slices.
-
+#![no_std]
 #![deny(missing_docs)]
 #![warn(missing_debug_implementations)]
+#![feature(alloc)]
+
+#[macro_use] extern crate alloc;
 
 extern crate num as libnum;
+extern crate num_traits;
 extern crate matrixmultiply;
-extern crate alloc;
+extern crate libm;
 
 // macros should be at the top in order for macros to be accessible in subsequent modules
 #[macro_use]
@@ -103,24 +107,5 @@ pub mod norm;
 
 mod internal_utils;
 
-#[cfg(test)]
-mod testsupport;
-
-#[cfg(test)]
-#[macro_use]
-extern crate quickcheck;
-
-#[cfg(test)]
-extern crate itertools;
-
 pub use norm::{VectorNorm, MatrixNorm};
 pub use norm::{VectorMetric, MatrixMetric};
-
-#[cfg(feature = "io")]
-extern crate csv as libcsv;
-
-#[cfg(feature = "io")]
-extern crate rustc_serialize;
-
-#[cfg(feature = "io")]
-pub mod io;

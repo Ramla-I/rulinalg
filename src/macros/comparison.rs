@@ -1,9 +1,11 @@
 use ulp;
 use ulp::Ulp;
 
-use libnum::{Num, Float};
+use libnum::Num;
+use num_traits::float::FloatCore;
 
 use core::fmt;
+use alloc::string::String;
 
 /// Trait that describes elementwise comparators for [assert_matrix_eq!](../macro.assert_matrix_eq!.html).
 ///
@@ -149,7 +151,7 @@ pub struct FloatElementwiseComparator<T> {
 
 #[doc(hidden)]
 #[allow(dead_code)]
-impl<T> FloatElementwiseComparator<T> where T: Float + Ulp {
+impl<T> FloatElementwiseComparator<T> where T: FloatCore + Ulp {
     pub fn default() -> Self {
         FloatElementwiseComparator {
             abs: AbsoluteElementwiseComparator { tol: T::epsilon() },
@@ -173,7 +175,7 @@ impl<T> FloatElementwiseComparator<T> where T: Float + Ulp {
 }
 
 impl<T> ElementwiseComparator<T, UlpError> for FloatElementwiseComparator<T>
-    where T: Copy + Ulp + Float + fmt::Display {
+    where T: Copy + Ulp + FloatCore + fmt::Display {
     fn compare(&self, a: T, b: T) -> Result<(), UlpError> {
         // First perform an absolute comparison with a presumably very small epsilon tolerance
         if let Err(_) = self.abs.compare(a, b) {

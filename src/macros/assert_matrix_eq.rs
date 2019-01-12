@@ -2,9 +2,15 @@ use matrix::BaseMatrix;
 
 use core::fmt;
 
+use alloc::vec::Vec;
+use alloc::string::String;
+use alloc::prelude::{ToString, ToOwned};
+
 use macros::ElementwiseComparator;
 
 use macros::comparison::ComparisonFailure;
+
+use libm::F32Ext;
 
 const MAX_MISMATCH_REPORTS: usize = 12;
 
@@ -103,7 +109,7 @@ Dimensions of matrices X and Y do not match.
 }
 
 #[doc(hidden)]
-pub fn elementwise_matrix_comparison<T, M, C, E>(x: &M, y: &M, comparator: C)
+pub fn elementwise_matrix_comparison<T : F32Ext, M, C, E>(x: &M, y: &M, comparator: C)
     -> MatrixComparisonResult<T, C, E>
     where M: BaseMatrix<T>, T: Copy, C: ElementwiseComparator<T, E>, E: ComparisonFailure {
     if x.rows() == y.rows() && x.cols() == y.cols() {
@@ -194,7 +200,7 @@ pub fn elementwise_matrix_comparison<T, M, C, E>(x: &M, y: &M, comparator: C)
 /// ### The `float` comparator
 /// The `float` comparator is designed to be a conservative default for comparing floating-point numbers.
 /// It is inspired by the `AlmostEqualUlpsAndAbs` comparison function proposed in the excellent blog post
-/// [Comparing Floating Point Numbers, 2012 Edition]
+/// [Comparinging Point Numbers, 2012 Edition]
 /// (https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/)
 /// by Bruce Dawson.
 ///

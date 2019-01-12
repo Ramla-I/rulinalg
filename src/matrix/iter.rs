@@ -1,6 +1,8 @@
 use core::iter::{ExactSizeIterator, FromIterator};
 use core::mem;
 
+use alloc::vec::Vec;
+
 use super::{Matrix, MatrixSlice, MatrixSliceMut};
 use super::{Column, ColumnMut, Cols, ColsMut, Row, RowMut, Rows, RowsMut, Diagonal, DiagonalMut};
 use super::{BaseMatrix, BaseMatrixMut, SliceIter, SliceIterMut};

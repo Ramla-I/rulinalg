@@ -2,6 +2,8 @@
 //!
 //! Contains implementations of `std::convert::From`
 //! for Matrix and Vector types.
+use alloc::vec::Vec;
+use alloc::prelude::ToOwned;
 
 use core::convert::From;
 
@@ -75,16 +77,15 @@ impl<T: ToPrimitive> Matrix<T> {
     /// # Failures
     /// - One or more of the elements in the matrix cannot be converted into
     ///   the new type.
-    pub fn try_into<U: NumCast>(self) -> Result<Matrix<U>, Error> {
+    pub fn try_into<U: NumCast>(self) -> Result<Matrix<U>, &'static str> {
         let (m, n) = (self.rows(), self.cols());
         let ref make_error = || {
-            Error::new(ErrorKind::ScalarConversionFailure,
-                       "Failed to convert between scalar types.")
+                        "Failed to convert between scalar types."
         };
         let converted_data = self.into_vec()
             .into_iter()
             .map(|x| U::from(x).ok_or_else(make_error))
-            .collect::<Result<Vec<_>, Error>>();
+            .collect::<Result<Vec<_>, &'static str>>();
 
         Ok(Matrix::<U>::new(m, n, try!(converted_data)))
     }

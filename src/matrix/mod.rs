@@ -8,12 +8,15 @@
 
 use core;
 use core::marker::PhantomData;
-use libnum::Float;
+use num_traits::float::FloatCore;
+
+use alloc::vec::Vec;
 
 use error::{Error, ErrorKind};
 use vector::Vector;
 
 use utils;
+
 
 pub mod decomposition;
 mod base;
@@ -42,7 +45,7 @@ pub enum Axes {
 ///
 /// Can be instantiated with any type.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Matrix<T> {
+pub struct Matrix<T > {
     rows: usize,
     cols: usize,
     data: Vec<T>,
@@ -315,8 +318,8 @@ pub struct SliceIterMut<'a, T: 'a> {
 ///
 /// Here U is an upper triangular matrix and y a vector
 /// which is dimensionally compatible with U.
-fn back_substitution<T, M>(u: &M, y: Vector<T>) -> Result<Vector<T>, Error>
-    where T: Float,
+fn back_substitution<T , M>(u: &M, y: Vector<T>) -> Result<Vector<T>, &'static str>
+    where T: FloatCore,
           M: BaseMatrix<T>
 {
     assert!(u.rows() == u.cols(), "Matrix U must be square.");
@@ -331,8 +334,7 @@ fn back_substitution<T, M>(u: &M, y: Vector<T>) -> Result<Vector<T>, Error>
         // TODO: Remove unsafe once `get` is available in `BaseMatrix`
         let divisor = unsafe { u.get_unchecked([i, i]).clone() };
         if divisor.abs() < T::epsilon() {
-            return Err(Error::new(ErrorKind::DivByZero,
-                "Lower triangular matrix is singular to working precision."));
+            return Err("Lower triangular matrix is singular to working precision.");
         }
 
         // We have
@@ -360,8 +362,8 @@ fn back_substitution<T, M>(u: &M, y: Vector<T>) -> Result<Vector<T>, Error>
 ///
 /// Here, L is a square, lower triangular matrix and y
 /// is a vector which is dimensionally compatible with L.
-fn forward_substitution<T, M>(l: &M, y: Vector<T>) -> Result<Vector<T>, Error>
-    where T: Float,
+fn forward_substitution<T , M>(l: &M, y: Vector<T>) -> Result<Vector<T>, &'static str>
+    where T: FloatCore,
           M: BaseMatrix<T>
 {
     assert!(l.rows() == l.cols(), "Matrix L must be square.");
@@ -373,8 +375,7 @@ fn forward_substitution<T, M>(l: &M, y: Vector<T>) -> Result<Vector<T>, Error>
         // TODO: Remove unsafe once `get` is available in `BaseMatrix`
         let divisor = unsafe { l.get_unchecked([i, i]).clone() };
         if divisor.abs() < T::epsilon() {
-            return Err(Error::new(ErrorKind::DivByZero,
-                "Lower triangular matrix is singular to working precision."));
+            return Err("Lower triangular matrix is singular to working precision.");
         }
 
         // We have

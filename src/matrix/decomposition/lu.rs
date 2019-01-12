@@ -3,18 +3,19 @@ use matrix::{back_substitution};
 use matrix::PermutationMatrix;
 use vector::Vector;
 use error::{Error, ErrorKind};
-
+use alloc::vec::Vec;
 use core::any::Any;
 use core::cmp;
-
-use libnum::{Float, Zero, One};
+use num_traits::float::FloatCore;
+use libnum::{Zero, One};
+// use libm:;
 
 use matrix::decomposition::Decomposition;
 
 /// Result of unpacking an instance of
 /// [PartialPivLu](struct.PartialPivLu.html).
 #[derive(Debug, Clone)]
-pub struct LUP<T> {
+pub struct LUP<T > {
     /// The lower triangular matrix in the decomposition.
     pub l: Matrix<T>,
     /// The upper triangular matrix in the decomposition.
@@ -127,12 +128,12 @@ pub struct LUP<T> {
 /// # }
 /// ```
 #[derive(Debug, Clone)]
-pub struct PartialPivLu<T> {
+pub struct PartialPivLu<T > {
     lu: Matrix<T>,
     p: PermutationMatrix<T>
 }
 
-impl<T: Clone + One + Zero> Decomposition for PartialPivLu<T> {
+impl<T: Clone + One + Zero > Decomposition for PartialPivLu<T> {
     type Factors = LUP<T>;
 
     fn unpack(self) -> LUP<T> {
@@ -149,7 +150,7 @@ impl<T: Clone + One + Zero> Decomposition for PartialPivLu<T> {
     }
 }
 
-impl<T: 'static + Float> PartialPivLu<T> {
+impl<T: 'static + FloatCore > PartialPivLu<T> {
     /// Performs the decomposition.
     ///
     /// # Panics
@@ -160,7 +161,7 @@ impl<T: 'static + Float> PartialPivLu<T> {
     ///
     /// An error will be returned if the matrix
     /// is singular to working precision (badly conditioned).
-    pub fn decompose(matrix: Matrix<T>) -> Result<Self, Error> {
+    pub fn decompose(matrix: Matrix<T>) -> Result<Self, &'static str> {
         let n = matrix.cols;
         assert!(matrix.rows == n, "Matrix must be square for LU decomposition.");
         let mut lu = matrix;
@@ -177,9 +178,8 @@ impl<T: 'static + Float> PartialPivLu<T> {
                 }
             }
             if curr_max.abs() < T::epsilon() {
-                return Err(Error::new(ErrorKind::DivByZero,
-                    "The matrix is too ill-conditioned for
-                     LU decomposition with partial pivoting."));
+                return Err("The matrix is too ill-conditioned for
+                     LU decomposition with partial pivoting.");
             }
 
             lu.swap_rows(index, curr_max_idx);
@@ -196,7 +196,7 @@ impl<T: 'static + Float> PartialPivLu<T> {
 
 // TODO: Remove Any bound (cannot for the time being, since
 // back substitution uses Any bound)
-impl<T> PartialPivLu<T> where T: Any + Float {
+impl<T> PartialPivLu<T> where T: Any + FloatCore {
     /// Solves the linear system `Ax = b`.
     ///
     /// Here, `A` is the decomposed matrix satisfying
@@ -228,7 +228,7 @@ impl<T> PartialPivLu<T> where T: Any + Float {
     /// assert_vector_eq!(y, vector![3.0, 4.0, 2.0, 1.0], comp = float);
     /// # }
     /// ```
-    pub fn solve(&self, b: Vector<T>) -> Result<Vector<T>, Error> {
+    pub fn solve(&self, b: Vector<T>) -> Result<Vector<T>, &'static str> {
         assert!(b.size() == self.lu.rows(),
             "Right-hand side vector must have compatible size.");
         // Note that applying p here implicitly incurs a clone.
@@ -248,7 +248,7 @@ impl<T> PartialPivLu<T> where T: Any + Float {
     ///
     /// # Errors
     /// The inversion might fail if the matrix is very ill-conditioned.
-    pub fn inverse(&self) -> Result<Matrix<T>, Error> {
+    pub fn inverse(&self) -> Result<Matrix<T>, &'static str> {
         let n = self.lu.rows();
         let mut inv = Matrix::zeros(n, n);
         let mut e = Vector::zeros(n);
@@ -305,7 +305,7 @@ impl<T> PartialPivLu<T> where T: Any + Float {
 ///
 /// PAQ = LU
 #[derive(Debug, Clone)]
-pub struct LUPQ<T> {
+pub struct LUPQ<T > {
     /// The lower triangular matrix in the decomposition.
     pub l: Matrix<T>,
 
@@ -336,13 +336,13 @@ pub struct LUPQ<T> {
 /// See [PartialPivLu](decomposition/struct.PartialPivLu.html) for
 /// applications of LU decompositions in general.
 #[derive(Debug, Clone)]
-pub struct FullPivLu<T> {
+pub struct FullPivLu<T > {
     lu: Matrix<T>,
     p: PermutationMatrix<T>,
     q: PermutationMatrix<T>
 }
 
-impl<T: Clone + One + Zero> Decomposition for FullPivLu<T> {
+impl<T: Clone + One + Zero > Decomposition for FullPivLu<T> {
     type Factors = LUPQ<T>;
 
     fn unpack(self) -> LUPQ<T> {
@@ -360,7 +360,7 @@ impl<T: Clone + One + Zero> Decomposition for FullPivLu<T> {
     }
 }
 
-impl<T: 'static + Float> FullPivLu<T> {
+impl<T: 'static + FloatCore > FullPivLu<T> {
     fn select_pivot(mat: &Matrix<T>, index: usize) -> (usize, usize, T) {
         let mut piv_row = index;
         let mut piv_col = index;
@@ -432,7 +432,7 @@ impl<T: 'static + Float> FullPivLu<T> {
 
 // TODO: Remove Any bound (cannot for the time being, since
 // back substitution uses Any bound)
-impl<T> FullPivLu<T> where T: Any + Float {
+impl<T> FullPivLu<T> where T: Any + FloatCore {
 
     /// Solves the linear system `Ax = b`.
     ///
@@ -465,7 +465,7 @@ impl<T> FullPivLu<T> where T: Any + Float {
     /// assert_vector_eq!(y, vector![3.0, 4.0, 2.0, 1.0], comp = float);
     /// # }
     /// ```
-    pub fn solve(&self, b: Vector<T>) -> Result<Vector<T>, Error> {
+    pub fn solve(&self, b: Vector<T>) -> Result<Vector<T>, &'static str> {
         assert!(b.size() == self.lu.rows(),
             "Right-hand side vector must have compatible size.");
 
@@ -479,16 +479,13 @@ impl<T> FullPivLu<T> where T: Any + Float {
     /// # Errors
     /// The inversion might fail if the matrix is very ill-conditioned.
     /// The inversion fails if the matrix is not invertible.
-    pub fn inverse(&self) -> Result<Matrix<T>, Error> {
+    pub fn inverse(&self) -> Result<Matrix<T>, &'static str> {
         let n = self.lu.rows();
         let mut inv = Matrix::zeros(n, n);
         let mut e = Vector::zeros(n);
 
         if !self.is_invertible() {
-            return Err(
-                Error::new(
-                    ErrorKind::DivByZero,
-                    "Non-invertible matrix found while attempting inversion"));
+            return Err("Non-invertible matrix found while attempting inversion");
         }
 
         for i in 0 .. n {
@@ -600,7 +597,7 @@ impl<T> FullPivLu<T> where T: Any + Float {
 
 /// Performs Gaussian elimination in the lower-right hand corner starting at
 /// (index, index).
-fn gaussian_elimination<T: Float>(lu: &mut Matrix<T>, index: usize) {
+fn gaussian_elimination<T: FloatCore >(lu: &mut Matrix<T>, index: usize) {
 
     let piv_val = lu[[index, index]];
 
@@ -621,7 +618,7 @@ fn gaussian_elimination<T: Float>(lu: &mut Matrix<T>, index: usize) {
 /// to the strictly lower triangular part of L.
 ///
 /// This is equivalent to solving the system Lx = b.
-fn lu_forward_substitution<T: Float>(lu: &Matrix<T>, b: Vector<T>) -> Vector<T> {
+fn lu_forward_substitution<T: FloatCore >(lu: &Matrix<T>, b: Vector<T>) -> Vector<T> {
     assert!(lu.rows() == lu.cols(), "LU matrix must be square.");
     assert!(b.size() == lu.rows(), "LU matrix and RHS vector must be compatible.");
     let mut x = b;
@@ -641,7 +638,7 @@ fn lu_forward_substitution<T: Float>(lu: &Matrix<T>, b: Vector<T>) -> Vector<T> 
     x
 }
 
-fn unit_lower_triangular_part<T, M>(matrix: &M) -> Matrix<T>
+fn unit_lower_triangular_part<T , M>(matrix: &M) -> Matrix<T>
     where T: Zero + One + Clone, M: BaseMatrix<T> {
 
     let m = matrix.rows();
@@ -663,7 +660,7 @@ fn unit_lower_triangular_part<T, M>(matrix: &M) -> Matrix<T>
 }
 
 
-impl<T> Matrix<T> where T: Any + Float
+impl<T > Matrix<T> where T: Any + FloatCore
 {
     /// Computes L, U, and P for LUP decomposition.
     ///
@@ -695,7 +692,7 @@ impl<T> Matrix<T> where T: Any + Float
     ///
     /// - Matrix cannot be LUP decomposed.
     #[deprecated]
-    pub fn lup_decomp(self) -> Result<(Matrix<T>, Matrix<T>, Matrix<T>), Error> {
+    pub fn lup_decomp(self) -> Result<(Matrix<T>, Matrix<T>, Matrix<T>), &'static str> {
         let n = self.cols;
         assert!(self.rows == n, "Matrix must be square for LUP decomposition.");
         let mut l = Matrix::<T>::zeros(n, n);
@@ -713,9 +710,8 @@ impl<T> Matrix<T> where T: Any + Float
                 }
             }
             if curr_max.abs() < T::epsilon() {
-                return Err(Error::new(ErrorKind::DivByZero,
-                    "Singular matrix found in LUP decomposition. \
-                    A value in the diagonal of U == 0.0."));
+                return Err("Singular matrix found in LUP decomposition. \
+                    A value in the diagonal of U == 0.0.");
             }
 
             if curr_max_idx != index {

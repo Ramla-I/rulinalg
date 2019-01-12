@@ -2,7 +2,7 @@ use super::{Matrix, MatrixSlice, MatrixSliceMut, BaseMatrix};
 
 use core::any::{Any, TypeId};
 use core::ops::{Add, Mul};
-
+use alloc::vec::Vec;
 use libnum::Zero;
 use matrixmultiply;
 

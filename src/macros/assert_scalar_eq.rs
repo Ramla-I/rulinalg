@@ -1,4 +1,6 @@
 use core::fmt;
+use alloc::string::String;
+use::alloc::prelude::ToString;
 
 use macros::ElementwiseComparator;
 use macros::comparison::ComparisonFailure;

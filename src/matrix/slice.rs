@@ -1,6 +1,8 @@
 use matrix::{Matrix, MatrixSlice, MatrixSliceMut};
 use core::marker::PhantomData;
 
+use alloc::vec::Vec;
+
 impl<'a, T> MatrixSlice<'a, T> {
     /// Produce a `MatrixSlice` from a `Matrix`
     ///

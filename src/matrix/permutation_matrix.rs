@@ -1,5 +1,7 @@
 use core;
 
+use alloc::vec::Vec;
+
 use matrix::{Matrix, BaseMatrix, BaseMatrixMut};
 use vector::Vector;
 use error::{Error, ErrorKind};
@@ -162,7 +164,7 @@ impl<T> PermutationMatrix<T> {
     ///
     /// - Each element must be in the half-open range [0, N).
     /// - Each element must be unique.
-    pub fn from_array<A: Into<Vec<usize>>>(array: A) -> Result<PermutationMatrix<T>, Error> {
+    pub fn from_array<A: Into<Vec<usize>>>(array: A) -> Result<PermutationMatrix<T>, &'static str> {
         let p = PermutationMatrix {
             perm: array.into(),
             marker: core::marker::PhantomData
@@ -435,7 +437,7 @@ fn validate_permutation_right_mul_dimensions<T, M>(lhs: &M, p: &PermutationMatri
              are not compatible.");
 }
 
-fn validate_permutation(perm: &[usize]) -> Result<(), Error> {
+fn validate_permutation(perm: &[usize]) -> Result<(), &'static str> {
     // Recall that a permutation array of size n is valid if:
     // 1. All elements are in the range [0, n)
     // 2. All elements are unique
@@ -453,16 +455,14 @@ fn validate_permutation(perm: &[usize]) -> Result<(), Error> {
             visited[p] = true;
         }
         else {
-            return Err(Error::new(ErrorKind::InvalidPermutation,
-                "Supplied permutation array contains elements out of bounds."));
+            return Err("Supplied permutation array contains elements out of bounds.");
         }
     }
     let all_unique = visited.iter().all(|x| x.clone());
     if all_unique {
         Ok(())
     } else {
-        Err(Error::new(ErrorKind::InvalidPermutation,
-            "Supplied permutation array contains duplicate elements."))
+        Err("Supplied permutation array contains duplicate elements.")
     }
 }
 

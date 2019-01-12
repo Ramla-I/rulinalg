@@ -27,7 +27,7 @@ use matrix::{SliceIter, SliceIterMut};
 use norm::{MatrixNorm, MatrixMetric};
 use vector::Vector;
 use utils;
-use libnum::{Zero, Float};
+use libnum::Zero;
 use error::Error;
 
 use core::any::Any;
@@ -37,11 +37,15 @@ use core::mem;
 use core::ops::{Add, Mul, Div};
 use core::ptr;
 use core::slice;
+use num_traits::float::FloatCore;
+use libm::F32Ext;
+
+use alloc::vec::Vec;
 
 mod impl_base;
 
 /// Trait for immutable matrix structs.
-pub trait BaseMatrix<T>: Sized {
+pub trait BaseMatrix<T >: Sized {
     /// Rows in the matrix.
     fn rows(&self) -> usize;
 
@@ -430,7 +434,7 @@ pub trait BaseMatrix<T>: Sized {
     /// # }
     /// ```
     fn norm<N: MatrixNorm<T, Self>>(&self, norm: N) -> T
-        where T: Float
+        where T: FloatCore
     {
         norm.norm(self)
     }
@@ -1012,13 +1016,10 @@ pub trait BaseMatrix<T>: Sized {
     ///
     /// - There is no valid solution to the system (matrix is singular).
     /// - The matrix is empty.
-    fn solve_u_triangular(&self, y: Vector<T>) -> Result<Vector<T>, Error>
-        where T: Any + Float
+    fn solve_u_triangular(&self, y: Vector<T>) -> Result<Vector<T>, &'static str>
+        where T: Any + FloatCore
     {
-        assert!(self.cols() == y.size(),
-                format!("Vector size {0} != {1} Matrix column count.",
-                        y.size(),
-                        self.cols()));
+        assert!(self.cols() == y.size(), "Vector size != Matrix column count.");
 
         back_substitution(self, y)
     }
@@ -1055,13 +1056,10 @@ pub trait BaseMatrix<T>: Sized {
     ///
     /// - There is no valid solution to the system (matrix is singular).
     /// - The matrix is empty.
-    fn solve_l_triangular(&self, y: Vector<T>) -> Result<Vector<T>, Error>
-        where T: Any + Float
+    fn solve_l_triangular(&self, y: Vector<T>) -> Result<Vector<T>, &'static str>
+        where T: Any + FloatCore
     {
-        assert!(self.cols() == y.size(),
-                format!("Vector size {0} != {1} Matrix column count.",
-                        y.size(),
-                        self.cols()));
+        assert!(self.cols() == y.size(), "Vector size != Matrix column count.");
 
         forward_substitution(self, y)
     }
@@ -1145,7 +1143,7 @@ pub trait BaseMatrix<T>: Sized {
 }
 
 /// Trait for mutable matrices.
-pub trait BaseMatrixMut<T>: BaseMatrix<T> {
+pub trait BaseMatrixMut<T >: BaseMatrix<T> {
     /// Top left index of the slice.
     fn as_mut_ptr(&mut self) -> *mut T;
 
@@ -1392,10 +1390,8 @@ pub trait BaseMatrixMut<T>: BaseMatrix<T> {
     ///
     /// Panics if `a` or `b` are out of bounds.
     fn swap_rows(&mut self, a: usize, b: usize) {
-        assert!(a < self.rows(),
-                format!("Row index {0} larger than row count {1}", a, self.rows()));
-        assert!(b < self.rows(),
-                format!("Row index {0} larger than row count {1}", b, self.rows()));
+        assert!(a < self.rows(), "Row index larger than row count (a).");
+        assert!(b < self.rows(), "Row index larger than row count (b).");
 
         if a != b {
             unsafe {
@@ -1445,9 +1441,9 @@ pub trait BaseMatrixMut<T>: BaseMatrix<T> {
     /// Panics if `a` or `b` are out of bounds.
     fn swap_cols(&mut self, a: usize, b: usize) {
         assert!(a < self.cols(),
-                format!("Row index {0} larger than row count {1}", a, self.rows()));
+                "Row index larger than row count (a).");
         assert!(b < self.cols(),
-                format!("Row index {0} larger than row count {1}", b, self.rows()));
+                "Row index larger than row count (b).");
 
         if a != b {
             unsafe {

@@ -2,7 +2,7 @@
 
 use alloc::boxed::Box;
 use core::convert::Into;
-use core::error;
+// use core::error;
 use core::fmt;
 use core::marker::{Send, Sync};
 
@@ -10,7 +10,7 @@ use core::marker::{Send, Sync};
 #[derive(Debug)]
 pub struct Error {
     kind: ErrorKind,
-    error: Box<error::Error + Send + Sync>,
+    error: Box<&'static str>,
 }
 
 /// Types of errors produced in the linalg module.
@@ -35,12 +35,12 @@ pub enum ErrorKind {
 
 impl Error {
     /// Construct a new `Error` of a particular `ErrorKind`.
-    pub fn new<E>(kind: ErrorKind, error: E) -> Error
-        where E: Into<Box<error::Error + Send + Sync>>
+    pub fn new<E>(kind: ErrorKind, error: &'static str) -> Error
+        where E: Into<Box<Send + Sync>>
     {
         Error {
             kind: kind,
-            error: error.into(),
+            error: Box::new(error),
         }
     }
 
@@ -48,13 +48,17 @@ impl Error {
     pub fn kind(&self) -> &ErrorKind {
         &self.kind
     }
-}
 
-impl error::Error for Error {
     fn description(&self) -> &str {
-        self.error.description()
+        *self.error
     }
 }
+
+// impl error::Error for Error {
+//     fn description(&self) -> &str {
+//         self.error.description()
+//     }
+// }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

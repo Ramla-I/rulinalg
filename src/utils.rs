@@ -6,6 +6,8 @@ use core::cmp;
 use libnum::Zero;
 use core::ops::{Add, Mul, Sub, Div};
 
+use alloc::vec::Vec;
+
 /// Compute dot product of two slices.
 ///
 /// # Examples

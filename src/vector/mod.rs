@@ -3,6 +3,8 @@
 //! Currently contains all code
 //! relating to the vector linear algebra struct.
 
+use alloc::vec::Vec;
+
 mod impl_ops;
 mod impl_vec;
 

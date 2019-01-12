@@ -135,20 +135,24 @@ mod householder;
 
 use core::any::Any;
 
+use alloc::vec::Vec;
+
 use matrix::{Matrix, BaseMatrix};
 use norm::Euclidean;
 use vector::Vector;
 use utils;
 use error::{Error, ErrorKind};
 
-use self::householder::HouseholderReflection;
+use libm::F32Ext;
 
-pub use self::householder::HouseholderComposition;
+// use self::householder::HouseholderReflection;
+
+// pub use self::householder::HouseholderComposition;
 pub use self::lu::{PartialPivLu, LUP, FullPivLu, LUPQ};
-pub use self::cholesky::Cholesky;
-pub use self::qr::{HouseholderQr, QR, ThinQR};
+// pub use self::cholesky::Cholesky;
+// pub use self::qr::{HouseholderQr, QR, ThinQR};
 
-use libnum::{Float};
+use num_traits::float::FloatCore;
 
 /// Base trait for decompositions.
 ///
@@ -166,7 +170,7 @@ pub trait Decomposition {
 }
 
 impl<T> Matrix<T>
-    where T: Any + Float
+    where T: Any + FloatCore + F32Ext
 {
     /// Compute the cos and sin values for the givens rotation.
     ///
@@ -177,20 +181,18 @@ impl<T> Matrix<T>
         (a / r, -b / r)
     }
 
-    fn make_householder(column: &[T]) -> Result<Matrix<T>, Error> {
+    fn make_householder(column: &[T]) -> Result<Matrix<T>, &'static str> {
         let size = column.len();
 
         if size == 0 {
-            return Err(Error::new(ErrorKind::InvalidArg,
-                                  "Column for householder transform cannot be empty."));
+            return Err("Column for householder transform cannot be empty.");
         }
 
         let denom = column[0] + column[0].signum() * utils::dot(column, column).sqrt();
 
         if denom == T::zero() {
-            return Err(Error::new(ErrorKind::DecompFailure,
-                                  "Cannot produce househoulder transform from column as first \
-                                   entry is 0."));
+            return Err("Cannot produce househoulder transform from column as first \
+                                   entry is 0.");
         }
 
         let mut v = column.into_iter().map(|&x| x / denom).collect::<Vec<T>>();
@@ -204,20 +206,18 @@ impl<T> Matrix<T>
         Ok(Matrix::<T>::identity(size) - (v_vert * v_hor) * ((T::one() + T::one()) / v_norm_sq))
     }
 
-    fn make_householder_vec(column: &[T]) -> Result<Matrix<T>, Error> {
+    fn make_householder_vec(column: &[T]) -> Result<Matrix<T>, &'static str> {
         let size = column.len();
 
         if size == 0 {
-            return Err(Error::new(ErrorKind::InvalidArg,
-                                  "Column for householder transform cannot be empty."));
+            return Err("Column for householder transform cannot be empty.");
         }
 
         let denom = column[0] + column[0].signum() * utils::dot(column, column).sqrt();
 
         if denom == T::zero() {
-            return Err(Error::new(ErrorKind::DecompFailure,
-                                  "Cannot produce househoulder transform from column as first \
-                                   entry is 0."));
+            return Err("Cannot produce househoulder transform from column as first \
+                                   entry is 0.");
         }
 
         let mut v = column.into_iter().map(|&x| x / denom).collect::<Vec<T>>();

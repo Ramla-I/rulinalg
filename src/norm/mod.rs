@@ -30,9 +30,10 @@
 use matrix::BaseMatrix;
 use vector::Vector;
 use utils;
+use libm::F32Ext;
 
 use core::ops::Sub;
-use libnum::Float;
+use num_traits::float::FloatCore;
 
 /// Trait for vector norms
 pub trait VectorNorm<T> {
@@ -99,13 +100,13 @@ impl<'a, 'b, U, T, M1, M2> MatrixMetric<'a, 'b, T, M1, M2> for U
 #[derive(Debug)]
 pub struct Euclidean;
 
-impl<T: Float> VectorNorm<T> for Euclidean {
+impl<T: FloatCore + F32Ext> VectorNorm<T> for Euclidean {
     fn norm(&self, v: &Vector<T>) -> T {
         utils::dot(v.data(), v.data()).sqrt()
     }
 }
 
-impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Euclidean {
+impl<T: FloatCore + F32Ext, M: BaseMatrix<T>> MatrixNorm<T, M> for Euclidean {
     fn norm(&self, m: &M) -> T {
         let mut s = T::zero();
 
@@ -136,7 +137,7 @@ impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Euclidean {
 /// You should avoid matching directly against this enum as it is likely
 /// to grow.
 #[derive(Debug)]
-pub enum Lp<T: Float> {
+pub enum Lp<T: FloatCore> {
     /// The L-infinity norm (supremum)
     Infinity,
     /// The Lp norm where p is an integer
@@ -145,13 +146,13 @@ pub enum Lp<T: Float> {
     Float(T)
 }
 
-impl<T: Float> VectorNorm<T> for Lp<T> {
+impl<T: FloatCore + F32Ext> VectorNorm<T> for Lp<T> {
     fn norm(&self, v: &Vector<T>) -> T {
         match *self {
             Lp::Infinity => {
                 // Compute supremum
                 let mut abs_sup = T::zero();
-                for d in v.iter().map(|d| d.abs()) {
+                for d in v.iter().map(|d| num_traits::float::FloatCore::abs(*d)) {
                     if d > abs_sup {
                         abs_sup = d;
                     }
@@ -163,7 +164,7 @@ impl<T: Float> VectorNorm<T> for Lp<T> {
                 // Compute standard lp norm
                 let mut s = T::zero();
                 for x in v {
-                    s = s + x.abs().powi(p);
+                    s = s + num_traits::float::FloatCore::abs(*x).powi(p);
                 }
                 s.powf(T::from(p).expect("Could not cast i32 to float").recip())
             },
@@ -172,7 +173,7 @@ impl<T: Float> VectorNorm<T> for Lp<T> {
                 // Compute standard lp norm
                 let mut s = T::zero();
                 for x in v {
-                    s = s + x.abs().powf(p);
+                    s = s + num_traits::float::FloatCore::abs(*x).powf(p);
                 }
                 s.powf(p.recip())
             }
@@ -180,13 +181,13 @@ impl<T: Float> VectorNorm<T> for Lp<T> {
     }
 }
 
-impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Lp<T> {
+impl<T: FloatCore + F32Ext, M: BaseMatrix<T>> MatrixNorm<T, M> for Lp<T> {
     fn norm(&self, m: &M) -> T {
         match *self {
             Lp::Infinity => {
                 // Compute supremum
                 let mut abs_sup = T::zero();
-                for d in m.iter().map(|d| d.abs()) {
+                for d in m.iter().map(|d| num_traits::float::FloatCore::abs(*d)) {
                     if d > abs_sup {
                         abs_sup = d;
                     }
@@ -198,7 +199,7 @@ impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Lp<T> {
                 // Compute standard lp norm
                 let mut s = T::zero();
                 for x in m.iter() {
-                    s = s + x.abs().powi(p);
+                    s = s + num_traits::float::FloatCore::abs(*x).powi(p);
                 }
                 s.powf(T::from(p).expect("Could not cast i32 to float").recip())
             },
@@ -207,7 +208,7 @@ impl<T: Float, M: BaseMatrix<T>> MatrixNorm<T, M> for Lp<T> {
                 // Compute standard lp norm
                 let mut s = T::zero();
                 for x in m.iter() {
-                    s = s + x.abs().powf(p);
+                    s = s + num_traits::float::FloatCore::abs(*x).powf(p);
                 }
                 s.powf(p.recip())
             }

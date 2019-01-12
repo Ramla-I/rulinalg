@@ -9,6 +9,8 @@ use core::ops::{Mul, Add, Div, Sub, Index, IndexMut, Neg};
 use core::ops::{MulAssign, AddAssign, SubAssign, DivAssign};
 use libnum::Zero;
 
+use alloc::vec::Vec;
+
 /// Indexes matrix.
 ///
 /// Takes row index first then column.

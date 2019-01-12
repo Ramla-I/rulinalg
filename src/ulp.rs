@@ -1,5 +1,6 @@
 //! Tools for ULP-based comparison of floating point numbers.
 use core::mem;
+use alloc::prelude::ToOwned;
 
 /// Represents the result of an ULP-based comparison between two floating point numbers.
 #[derive(Debug, Copy, Clone, PartialEq)]

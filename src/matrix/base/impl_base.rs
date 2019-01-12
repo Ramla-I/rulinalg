@@ -4,10 +4,13 @@ use matrix::{Row, RowMut, Column, ColumnMut};
 
 use utils;
 use libnum::Zero;
+use libm::F32Ext;
 
 use core::ops::{Add, Mul, Div};
 
-impl<T> BaseMatrix<T> for Matrix<T> {
+use alloc::vec::Vec;
+
+impl<T > BaseMatrix<T> for Matrix<T> {
     fn rows(&self) -> usize {
         self.rows
     }
@@ -78,7 +81,7 @@ impl<T> BaseMatrix<T> for Matrix<T> {
     }
 }
 
-impl<'a, T> BaseMatrix<T> for MatrixSlice<'a, T> {
+impl<'a, T > BaseMatrix<T> for MatrixSlice<'a, T> {
     fn rows(&self) -> usize {
         self.rows
     }
@@ -93,7 +96,7 @@ impl<'a, T> BaseMatrix<T> for MatrixSlice<'a, T> {
     }
 }
 
-impl<'a, T> BaseMatrix<T> for MatrixSliceMut<'a, T> {
+impl<'a, T > BaseMatrix<T> for MatrixSliceMut<'a, T> {
     fn rows(&self) -> usize {
         self.rows
     }
@@ -108,21 +111,21 @@ impl<'a, T> BaseMatrix<T> for MatrixSliceMut<'a, T> {
     }
 }
 
-impl<T> BaseMatrixMut<T> for Matrix<T> {
+impl<T > BaseMatrixMut<T> for Matrix<T> {
     /// Top left index of the slice.
     fn as_mut_ptr(&mut self) -> *mut T {
         self.data.as_mut_ptr()
     }
 }
 
-impl<'a, T> BaseMatrixMut<T> for MatrixSliceMut<'a, T> {
+impl<'a, T > BaseMatrixMut<T> for MatrixSliceMut<'a, T> {
     /// Top left index of the slice.
     fn as_mut_ptr(&mut self) -> *mut T {
         self.ptr
     }
 }
 
-impl<'a, T> BaseMatrix<T> for Row<'a, T> {
+impl<'a, T > BaseMatrix<T> for Row<'a, T> {
     fn rows(&self) -> usize {
         1
     }
@@ -138,7 +141,7 @@ impl<'a, T> BaseMatrix<T> for Row<'a, T> {
     }
 }
 
-impl<'a, T> BaseMatrix<T> for RowMut<'a, T> {
+impl<'a, T > BaseMatrix<T> for RowMut<'a, T> {
     fn rows(&self) -> usize {
         1
     }
@@ -154,14 +157,14 @@ impl<'a, T> BaseMatrix<T> for RowMut<'a, T> {
     }
 }
 
-impl<'a, T> BaseMatrixMut<T> for RowMut<'a, T> {
+impl<'a, T > BaseMatrixMut<T> for RowMut<'a, T> {
     /// Top left index of the slice.
     fn as_mut_ptr(&mut self) -> *mut T {
         self.row.as_mut_ptr()
     }
 }
 
-impl<'a, T> BaseMatrix<T> for Column<'a, T> {
+impl<'a, T > BaseMatrix<T> for Column<'a, T> {
     fn rows(&self) -> usize {
         self.col.rows()
     }
@@ -177,7 +180,7 @@ impl<'a, T> BaseMatrix<T> for Column<'a, T> {
     }
 }
 
-impl<'a, T> BaseMatrix<T> for ColumnMut<'a, T> {
+impl<'a, T > BaseMatrix<T> for ColumnMut<'a, T> {
     fn rows(&self) -> usize {
         self.col.rows()
     }
@@ -193,7 +196,7 @@ impl<'a, T> BaseMatrix<T> for ColumnMut<'a, T> {
     }
 }
 
-impl<'a, T> BaseMatrixMut<T> for ColumnMut<'a, T> {
+impl<'a, T > BaseMatrixMut<T> for ColumnMut<'a, T> {
     /// Top left index of the slice.
     fn as_mut_ptr(&mut self) -> *mut T {
         self.col.as_mut_ptr()

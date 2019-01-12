@@ -1,5 +1,9 @@
 use core::fmt;
 
+use alloc::vec::Vec;
+use alloc::string::String;
+use alloc::prelude::{ToString, ToOwned};
+
 use macros::ElementwiseComparator;
 
 use macros::comparison::ComparisonFailure;

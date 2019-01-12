@@ -7,6 +7,8 @@ use utils;
 
 use super::Vector;
 
+use alloc::vec::Vec;
+
 /// Indexes vector.
 impl<T> Index<usize> for Vector<T> {
     type Output = T;
